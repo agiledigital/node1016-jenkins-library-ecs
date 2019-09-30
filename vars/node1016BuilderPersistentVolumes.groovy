@@ -1,7 +1,7 @@
 def call(Map config) {
   return [
     [
-      path: '/home/jenkins/.npm',
+      path: '/home/jenkins/.cache',
       claimName: "${config.project}-home-jenkins-npm",
       sizeGiB: 1
     ]
