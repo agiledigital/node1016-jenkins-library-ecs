@@ -15,7 +15,6 @@ def call(Map config) {
     }
   }
   
-  container("node1016-builder") {
 
     stage('Build Details') {
       echo "Project:   ${config.project}"
@@ -32,56 +31,10 @@ def call(Map config) {
       junit allowEmptyResults: true, testResults: testOutput
     }
 
-  }
-
-   container('node1016-builder') {
     stage('Build') {
       yarn "build"
     }
-   }
-  
-  if(config.stage == 'dist') {
+   
 
-    container('node1016-builder') {
-
-      stage('Package') {
-        sh "mkdir -p ${artifactDir}"
-
-        yarn "install --production --ignore-scripts --prefer-offline"
-        sh "mv ${config.baseDir}/node_modules ${config.baseDir}/package.json ${artifactDir}"
-
-        // The build and dist folders may exisit depending on builder.
-        // Copy them into the artifact if they exist. e.g. React uses build, NodeJS defualt is dist.
-        if(fileExists("${config.baseDir}/dist")) {
-          sh "mv ${config.baseDir}/dist ${artifactDir}"
-        }
-        
-        if(fileExists("${config.baseDir}/build")) {
-          sh "mv ${config.baseDir}/build ${artifactDir}"
-        }
-        
-        if(fileExists("${config.baseDir}/serverless.yml")) {
-          sh "mv ${config.baseDir}/serverless.yml ${artifactDir}"
-        }
-
-        // The static folder and application specific config files 
-        // should also be staged if they exist.
-        if(fileExists("${config.baseDir}/static")) {
-          sh "mv ${config.baseDir}/static ${artifactDir}"
-        }
-
-        if(fileExists("${config.baseDir}/next.config.js")) {
-          sh "mv ${config.baseDir}/next.config.js ${artifactDir}"
-        }
-      }
-    }
-
-    stage('Archive to Jenkins') {
-      def tarName = "${config.project}-${config.component}-${config.buildNumber}.tar.gz"
-      sh "tar -czvf \"${tarName}\" -C \"${artifactDir}\" ."
-      archiveArtifacts tarName
-    }
-
-  }
 
 }
