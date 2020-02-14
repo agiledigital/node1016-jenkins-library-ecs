@@ -10,7 +10,7 @@ def call(Map config) {
   final yarn = { cmd ->
     ansiColor('xterm') {
       dir(config.baseDir) {
-        sh "JEST_JUNIT_OUTPUT=${testOutput} yarn ${cmd}"
+        sh "NODE_OPTIONS=--max-old-space-size=4096 JEST_JUNIT_OUTPUT=${testOutput} yarn ${cmd}"
       }
     }
   }
@@ -34,12 +34,15 @@ def call(Map config) {
 
   }
 
+   container('node1016-builder') {
+    stage('Build') {
+      yarn "build"
+    }
+   }
+  
   if(config.stage == 'dist') {
 
     container('node1016-builder') {
-      stage('Build') {
-        yarn "build"
-      }
 
       stage('Package') {
         sh "mkdir -p ${artifactDir}"
