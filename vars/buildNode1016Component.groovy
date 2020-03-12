@@ -14,27 +14,23 @@ def call(Map config) {
       }
     }
   }
-  
 
-    stage('Build Details') {
-      echo "Project:   ${config.project}"
-      echo "Component: ${config.component}"
-      echo "BuildNumber: ${config.buildNumber}"
-    }
+  stage('Build Details') {
+    echo "Project:   ${config.project}"
+    echo "Component: ${config.component}"
+    echo "BuildNumber: ${config.buildNumber}"
+  }
 
-    stage('Install dependencies') {
-      yarn "install"
-    }
+  stage('Install dependencies') {
+    yarn "install"
+  }
 
-    stage('Test') {
-      yarn 'test --ci --testResultsProcessor="jest-junit"'
-      junit allowEmptyResults: true, testResults: testOutput
-    }
+  stage('Test') {
+    yarn 'test --ci --testResultsProcessor="jest-junit"'
+    junit allowEmptyResults: true, testResults: testOutput
+  }
 
-    stage('Build') {
-      yarn "build"
-    }
-   
-
-
+  stage('Build') {
+    yarn "build"
+  }
 }
