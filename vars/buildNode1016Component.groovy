@@ -19,6 +19,7 @@ def call(Map config) {
     echo "Project:   ${config.project}"
     echo "Component: ${config.component}"
     echo "BuildNumber: ${config.buildNumber}"
+    echo "Stage: ${config.stage}"
   }
 
   stage('Install dependencies') {
