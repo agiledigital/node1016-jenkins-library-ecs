@@ -16,11 +16,7 @@ def call(Map config) {
     }
   }
 
-  if(config.stage == 'dist') {
-
-    stage('Build') {
-      yarn "build"
-    }
+  if(config.stage == 'staging') {
 
     stage('Package') {
       sh "mkdir -p ${artifactDir}"
